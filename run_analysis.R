@@ -1,17 +1,23 @@
 ##MY FINAL ASSIGMENT IN GETTING AND CLEANING DATA COURSE PROJECT #
-setwd("C:/Users/JOvissnoel/Documents/Rproyectos/Cleaning Data/FinalProy")
+setwd("C:/Users/JOvissnoel/Documents/Rproyectos/Cleaning Data")
 library(dplyr)
 
-### 1 Merges the training and the test sets to create one data set.####
-features<-read.csv("features.txt",sep = "",col.names = c("id_feature","functions"),header = FALSE)
-xtrain<-read.csv("X_train.txt",sep = "",header = FALSE,col.names = features$functions)
-ytrain<-read.csv("y_train.txt",sep = "",header = FALSE, col.names = "id_activity")
-xtest<-read.csv("X_test.txt",sep = "",header = FALSE, col.names = features$functions)
-ytest<-read.csv("y_test.txt",sep = "",header = FALSE, col.names = "id_activity")
+URL <- "https://d396qusza40orc.cloudfront.net/getdata%2Fprojectfiles%2FUCI%20HAR%20Dataset.zip"
+filename <- "SamsungData.zip"
+download.file(URL, filename)
+unzip(filename)
 
-activ <- read.csv("activity_labels.txt",header = FALSE,sep = "",col.names = c("id", "activity"))
-subject_test <- read.csv("subject_test.txt", sep = "",header = FALSE,col.names = "subject")
-subject_train<- read.csv("subject_train.txt",sep = "",header = FALSE,col.names = "subject")
+
+### 1 Merges the training and the test sets to create one data set.####
+features<-read.csv("UCI HAR Dataset/features.txt",sep = "",col.names = c("id_feature","functions"),header = FALSE)
+xtrain<-read.csv("UCI HAR Dataset/train/X_train.txt",sep = "",header = FALSE,col.names = features$functions)
+ytrain<-read.csv("UCI HAR Dataset/train/y_train.txt",sep = "",header = FALSE, col.names = "id_activity")
+xtest<-read.csv("UCI HAR Dataset/test/X_test.txt",sep = "",header = FALSE, col.names = features$functions)
+ytest<-read.csv("UCI HAR Dataset/test/y_test.txt",sep = "",header = FALSE, col.names = "id_activity")
+
+activ <- read.csv("UCI HAR Dataset/activity_labels.txt",header = FALSE,sep = "",col.names = c("id", "activity"))
+subject_test <- read.csv("UCI HAR Dataset/test/subject_test.txt", sep = "",header = FALSE,col.names = "subject")
+subject_train<- read.csv("UCI HAR Dataset/train/subject_train.txt",sep = "",header = FALSE,col.names = "subject")
 X<-rbind(xtrain, xtest)
 Y<-rbind(ytrain, ytest)
 subject<-rbind(subject_train,subject_test)
@@ -46,6 +52,4 @@ names(extracted)<-gsub("gravity", "Gravity", names(extracted))
 extracted_average<-extracted%>%group_by(activity,subject)%>%summarise_all(mean)
 
 write.table(extracted_average, "FinalDataBase.txt", row.name=FALSE)
-
-
 
